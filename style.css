@@ -1,0 +1,63 @@
+body {
+  font-family: sans-serif;
+  background: #f4f4f4;
+  text-align: center;
+  padding: 20px;
+  transition: background 0.5s ease;
+}
+
+body.win {
+  background-color: #d4edda; /* soft green */
+}
+
+h1 {
+  margin-top: 0;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 270px;
+}
+
+.cell {
+  width: 80px;
+  height: 80px;
+  font-size: 2rem;
+  background: #fff;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+#help {
+  background: rgba(0,0,0,0.7);
+  color: white;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+#help-content {
+  background: #333;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: left;
+  max-width: 300px;
+}
+
+#help ul {
+  text-align: left;
+}
