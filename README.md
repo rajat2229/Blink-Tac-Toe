@@ -17,8 +17,8 @@ Build a 2-player game that uses:
 
 ## 🚀 Live Demo
 
-👉 [Play the game here](https://your-live-link.com)  
-(*Replace with your deployed link after upload*)
+👉 [Play the game here](https://rajat2229.github.io/Blink-Tac-Toe/)  
+
 
 ---
 
