@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blink Tac Toe</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-top: 0;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 10px;
+      margin: 20px auto;
+      max-width: 270px;
+    }
+    .cell {
+      width: 80px;
+      height: 80px;
+      font-size: 2rem;
+      background: #fff;
+      border: 2px solid #ccc;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    #help {
+      background: rgba(0,0,0,0.7);
+      color: white;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    #help-content {
+      background: #333;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: left;
+      max-width: 300px;
+    }
+    #help ul {
+      text-align: left;
+    }
+    body.win {
+  background-color: #d4edda; /* soft green */
+}
+    body.win h1 {
+      color: #155724; /* dark green */
+    }
+    body.win #status {
+      color: #155724; /* dark green */
+    }
+    body.win .cell {
+      border-color: #c3e6cb; /* light green */
+    }
+    body.win button {
+      background-color: #155724; /* dark green */
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Blink Tac Toe</h1>
+  <p id="status">Player 1's Turn</p>
+  <div id="board"></div>
+  <button onclick="restart()">Play Again</button>
+  <button onclick="document.getElementById('help').style.display='flex'">Help</button>
+
+  <div id="help">
+    <div id="help-content">
+      <h3>How to Play</h3>
+      <ul>
+        <li>2 players take turns placing emojis.</li>
+        <li>Each can only have 3 on the board.</li>
+        <li>Oldest emoji vanishes (FIFO).</li>
+        <li>Get 3 in a row to win!</li>
+      </ul>
+      <button onclick="document.getElementById('help').style.display='none'">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const board = Array(9).fill(null);
+    const emojiCategories = {
+      player1: ['🐶', '🐱', '🐵', '🐰'],
+      player2: ['🍕', '🍟', '🍔', '🍩']
+    };
+
+    let currentPlayer = 'player1';
+    const emojiHistory = { player1: [], player2: [] };
+    const emojiPosition = { player1: [], player2: [] };
+    let gameOver = false;
+
+    const winCombos = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+
+    const boardDiv = document.getElementById('board');
+    const status = document.getElementById('status');
+
+    function drawBoard() {
+      boardDiv.innerHTML = '';
+      board.forEach((val, idx) => {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.textContent = val || '';
+        cell.addEventListener('click', () => handleClick(idx));
+        boardDiv.appendChild(cell);
+      });
+    }
+
+    function getRandomEmoji(player) {
+      const category = emojiCategories[player];
+      return category[Math.floor(Math.random() * category.length)];
+    }
+
+    function handleClick(index) {
+      if (board[index] || gameOver) return;
+
+      const emoji = getRandomEmoji(currentPlayer);
+      const history = emojiHistory[currentPlayer];
+      const positions = emojiPosition[currentPlayer];
+
+      if (history.length === 3) {
+        const oldIndex = positions[0];
+        if (oldIndex === index) return; // can't overwrite first
+        board[oldIndex] = null;
+        history.shift();
+        positions.shift();
+      }
+
+      board[index] = emoji;
+      history.push(emoji);
+      positions.push(index);
+      drawBoard();
+
+      if (checkWin(positions)) {
+  status.textContent = `${currentPlayer === 'player1' ? 'Player 1' : 'Player 2'} Wins!`;
+  document.body.classList.add('win'); // <-- Add green background
+  gameOver = true;
+
+
+      } else {
+        currentPlayer = currentPlayer === 'player1' ? 'player2' : 'player1';
+        status.textContent = `${currentPlayer === 'player1' ? 'Player 1' : 'Player 2'}'s Turn`;
+      }
+    }
+
+    function checkWin(pos) {
+      return winCombos.some(combo => combo.every(i => pos.includes(i)));
+    }
+
+    function restart() {
+  document.body.classList.remove('win'); // <-- remove win background
+  for (let i = 0; i < 9; i++) board[i] = null;
+  emojiHistory.player1 = [];
+  emojiHistory.player2 = [];
+  emojiPosition.player1 = [];
+  emojiPosition.player2 = [];
+  currentPlayer = 'player1';
+  gameOver = false;
+  status.textContent = "Player 1's Turn";
+  drawBoard();
+}
+
+
+    drawBoard();
+  </script>
+</body>
+</html>
+<script>
+  
